@@ -4,11 +4,11 @@ import (
 	"fmt"
 )
 
-func commandMap(cfg *config) error {
+func commandMap(cfg *config, args ...string) error {
 	return getLocationResp(cfg, cfg.Next)
 }
 
-func commandMapb(cfg *config) error {
+func commandMapb(cfg *config, args ...string) error {
 	if cfg.Previous == nil {
 		fmt.Println("You're on the first page")
 		return nil

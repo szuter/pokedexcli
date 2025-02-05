@@ -12,13 +12,14 @@ import (
 type cliCommand struct {
 	name        string
 	description string
-	callback    func(*config) error
+	callback    func(*config, ...string) error
 }
 
 type config struct {
 	pokeapiClient pokeapi.Client
 	Next          *string
 	Previous      *string
+	pokemonCaught map[string]pokeapi.Pokemon
 }
 
 func repl(cfg *config) {
@@ -36,9 +37,13 @@ func repl(cfg *config) {
 		}
 
 		sliceOfInput := cleanInput(input)
+		args := []string{}
+		if len(sliceOfInput) > 1 {
+			args = sliceOfInput[1:]
+		}
 		commands := getCommands()
 		if command, ok := commands[sliceOfInput[0]]; ok {
-			err := command.callback(cfg)
+			err := command.callback(cfg, args...)
 			if err != nil {
 				fmt.Println("Error:", err)
 			}
@@ -76,6 +81,16 @@ func getCommands() map[string]cliCommand {
 			name:        "mapb",
 			description: "Shows the previous 20 location areas",
 			callback:    commandMapb,
+		},
+		"explore": {
+			name:        "explore <location name>",
+			description: "Shows the pokemon in a location",
+			callback:    commandExplore,
+		},
+		"catch": {
+			name:        "catch <pokemon name>",
+			description: "Catch a pokemon",
+			callback:    commandCatch,
 		},
 	}
 }

@@ -14,7 +14,7 @@ func (c *Client) ListLocations(pageUrl *string) (RespLocations, error) {
 	}
 
 	if cached, ok := c.cache.Get(url); ok {
-		fmt.Println("Using cache")
+
 		location := RespLocations{}
 		err := json.Unmarshal(cached, &location)
 		if err != nil {
